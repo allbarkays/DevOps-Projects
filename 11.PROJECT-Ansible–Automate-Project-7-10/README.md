@@ -1,4 +1,3 @@
-# project11
 # ANSIBLE CONFIGURATION MANAGEMENT – AUTOMATE PROJECT 7 TO 10
 
 ## Project task:
@@ -82,8 +81,4 @@ ansible --version
 
 3. Clone down your ***ansible-config-mgt*** repo to the Jenkins-Ansible instance
 `git clone https://github.com/allbarkays/ansible-config-mgt.git`
-
-
-
-
 

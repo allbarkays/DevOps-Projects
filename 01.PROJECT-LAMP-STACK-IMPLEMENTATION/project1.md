@@ -1,5 +1,7 @@
 # Project 1
 
+# WEB STACK IMPLEMENTATION (LAMP STACK) IN AWS
+
 `sudo apt update`    ran sudo apt update command
 
 ![apt-update.PNG](./images/apt-update.PNG)
