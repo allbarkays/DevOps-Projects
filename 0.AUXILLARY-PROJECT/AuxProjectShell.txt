@@ -1,0 +1,56 @@
+#!/bin/bash
+userfile=$(cat names.csv)
+PASSWORD=password
+
+# Ensure the user running this script has sudo priviledge
+   if [ $(id -u) -eq 0 ]; then
+
+# Read the csv file
+    for user in $userfile;
+    do
+       echo $user
+    if id "$user" &>/dev/null
+    then
+        echo "User Exist"
+    else
+
+# Create a new user and specify a group "developer" the user should be in
+   useradd -m -d /home/$user -s /bin/bash -g developers $user
+   echo "New user $user has been created"
+   echo
+
+# Create .ssh folder in the user home directory
+   su - -c "mkdir ~/.ssh" $user
+   echo ".ssh directory created for user $user"
+   echo
+
+# Set "rwx" user permission for the .ssh directory 
+   su - -c "chmod 700 ~/.ssh" $user
+   echo "$user permission for .ssh directory is set"
+   echo
+
+# Create an authorized_key file
+   su - -c "touch ~/.ssh/authorized_keys" $user
+   echo "Authorized key file created for user $user"
+   echo
+
+# Set "rw" user permission for the key file
+   su - -c "chmod 600 ~/.ssh/authorized_keys" $user
+   echo "user permission for the Authorized key file set"
+   echo
+
+# Create and set public key for users in the server
+   cp -R "/home/ubuntu/Shell/id_rsa.pub" "/home/$user/.ssh/authorized_keys"
+   echo "Public key has been copied successfully to new user $user authorized_keys file"
+   echo
+
+   echo "ALL THE USER HAS BEEN CREATED SUCCESSFULLY"
+
+# Generate a password.
+ sudo echo -e "$PASSWORD\n$PASSWORD" | sudo passwd "$user"
+ sudo passwd -x 7 $user
+        fi
+     done
+   else
+ echo "Only Admin can Onboard users"
+    fi 
