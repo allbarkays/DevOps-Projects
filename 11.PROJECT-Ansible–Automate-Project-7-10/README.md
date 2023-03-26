@@ -222,15 +222,15 @@ git commit -m "commit message"
 ![pust-to-github.PNG](./images/pust-to-github.PNG)
 
 
-![pust-to-github.PNG](./images/pust-to-github.PNG)
-pull-request.PNG
-
-![pust-to-github.PNG](./images/pust-to-github.PNG)
-pull-request1.PNG
+![pull-request.PNG](./images/pull-request.PNG)
 
 
-![pust-to-github.PNG](./images/pust-to-github.PNG)
-pull-request2.PNG
+![pull-request1.PNG](./images/pull-request1.PNG)
+
+
+
+![pull-request2.PNG](./images/pull-request2.PNG)
+
 
 
 ![pull-request-merge.PNG](./images/pull-request-merge.PNG)
