@@ -75,10 +75,193 @@ ansible --version
 
 ## Step 2 – Prepare your development environment using Visual Studio Code
 
-1. Install VSCode
+1. Install VSCode which will be used to write and edit codes.
 
 2. Then connect to the newly created GitHub repository.
 
 3. Clone down your ***ansible-config-mgt*** repo to the Jenkins-Ansible instance
 `git clone https://github.com/allbarkays/ansible-config-mgt.git`
+
+
+### Ansible Configuration
+Clone ansible-config-mgt repo on local machine and create a new branch for development
+
+
+![Clone-GitHub.PNG](./images/Clone-GitHub.PNG)
+
+
+
+![clone-readme.PNG](./images/clone-readme.PNG)
+
+
+### BEGIN ANSIBLE DEVELOPMENT
+1. In the ***ansible-config-mgt*** GitHub repository, create a new branch that will be used for development by first using `git branch` to confirm my current branch
+
+Then, using `git checkout -b ansible-prj11` to create a new branch ***ansible-prj11*** and switch to the branch
+
+![git-branch.PNG](./images/git-branch.PNG)
+
+
+
+2. Checkout the newly created feature branch to your local machine and start building your code and directory structure
+3. Create a directory and name it `playbooks` – it will be used to store all the playbook files.
+
+`mkdir playbooks`
+
+4. Create a directory and name it `inventory` – it will be used to keep your hosts organised.
+
+`mkdir inventory`
+
+5. Within the playbooks folder, create your first playbook, and name it `common.yml`
+
+`touch common.yml`
+
+6. Within the inventory folder, create an inventory file `(.yml)` for each environment (Development, Staging Testing and Production) dev, staging, uat, and prod respectively.
+
+`touch dev.yml staging.yml uat.yml prod.yml`
+
+
+![Create-file-and-folders.PNG](./images/Create-file-and-folders.PNG)
+
+
+## Setting Up Inventory
+
+* Update your `inventory/dev.yml` file with this snippet of code:
+
+```
+[nfs]
+<NFS-Server-Private-IP-Address> ansible_ssh_user='ec2-user'
+
+[webservers]
+<Web-Server1-Private-IP-Address> ansible_ssh_user='ec2-user'
+<Web-Server2-Private-IP-Address> ansible_ssh_user='ec2-user'
+
+[db]
+<Database-Private-IP-Address> ansible_ssh_user='ubuntu' 
+
+[lb]
+<Load-Balancer-Private-IP-Address> ansible_ssh_user='ubuntu'
+```
+
+## Setup SSH agent and connect VS Code to the Jenkins-Ansible instance:
+
+* Note: Ansible uses TCP port 22 by default, which means it needs to ssh into target servers from Jenkins-Ansible host – for this we can implement the concept of ***ssh-agent***. Now we need to import the key into ssh-agent:
+
+
+```
+eval `ssh-agent -s
+ssh-add <path-to-private-key>
+```
+
+
+Now confirm the key has been added with the command below, you should see the name of your key
+
+`ssh-add -l`
+
+Now, ssh into your Jenkins-Ansible server using `ssh-agent`
+
+
+`ssh -A ubuntu@public-ip`
+
+
+![SSH-request.PNG](./images/SSH-request.PNG)
+
+
+![ssh-success.PNG](./images/ssh-success.PNG)
+
+
+## Creating a Common Playbook
+
+Update the following code in `/playbooks/common.yaml`
+
+```
+ ---
+- name: update web and nfs servers
+  hosts: webservers, nfs
+  remote_user: ec2-user
+  become: yes
+  become_user: root
+  tasks:
+    - name: ensure wireshark is at the latest version
+      yum:
+        name: wireshark
+        state: latest
+
+- name: update LB abd DB server
+  hosts: lb, db
+  remote_user: ubuntu
+  become: yes
+  become_user: root
+  tasks:
+    - name: Update apt repo
+      apt: 
+        update_cache: yes
+
+    - name: ensure wireshark is at the latest version
+      apt:
+        name: wireshark
+        state: latest
+```
+
+
+
+![script-update.PNG](./images/script-update.PNG)
+
+
+Now all of the directories and files live on the local machine and we need to push changes made locally with the following git commands to add, commit and push the branch to GitHub.
+
+```
+git status
+
+git add .
+
+git commit -m "commit message"
+```
+
+
+![pust-to-github.PNG](./images/pust-to-github.PNG)
+
+
+![pust-to-github.PNG](./images/pust-to-github.PNG)
+pull-request.PNG
+
+![pust-to-github.PNG](./images/pust-to-github.PNG)
+pull-request1.PNG
+
+
+![pust-to-github.PNG](./images/pust-to-github.PNG)
+pull-request2.PNG
+
+
+![pull-request-merge.PNG](./images/pull-request-merge.PNG)
+
+
+
+![pull-request-merge1.PNG](./images/pull-request-merge1.PNG)
+
+
+
+![jenkins-build.PNG](./images/jenkins-build.PNG)
+
+
+
+![dev-yml.PNG](./images/dev-yml.PNG)
+
+
+
+![common-yml.PNG](./images/common-yml.PNG)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
