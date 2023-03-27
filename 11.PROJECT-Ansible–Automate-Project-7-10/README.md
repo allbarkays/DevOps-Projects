@@ -267,7 +267,6 @@ ansible-playbook -i /var/lib/jenkins/jobs/ansible/builds/6/archive/inventory/dev
 At the end of this project we have implemented a solution that is shown below:
 
 
-Prj11-archy.PNG
 ![Prj11-archy.PNG](./images/Prj11-archy.PNG)
 
 
