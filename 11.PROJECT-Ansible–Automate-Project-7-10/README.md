@@ -149,7 +149,7 @@ Then, using `git checkout -b ansible-prj11` to create a new branch ***ansible-pr
 
 
 ```
-eval `ssh-agent -s
+eval `ssh-agent -s`
 ssh-add <path-to-private-key>
 ```
 
@@ -252,6 +252,23 @@ git commit -m "commit message"
 ![common-yml.PNG](./images/common-yml.PNG)
 
 
+## Run first ansible test
+```
+ansible-playbook -i /var/lib/jenkins/jobs/ansible/builds/<build-number>/archive/inventory/dev.yml /var/lib/jenkins/jobs/ansible/builds/<build-number>/archive/playbooks/common.yml
+```
+
+
+In my case:
+
+```
+ansible-playbook -i /var/lib/jenkins/jobs/ansible/builds/6/archive/inventory/dev.yml /var/lib/jenkins/jobs/ansible/builds/6/archive/playbooks/common.yml
+```
+
+At the end of this project we have implemented a solution that is shown below:
+
+
+Prj11-archy.PNG
+![Prj11-archy.PNG](./images/Prj11-archy.PNG)
 
 
 
