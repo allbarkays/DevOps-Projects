@@ -147,6 +147,8 @@ Then, using `git checkout -b ansible-prj11` to create a new branch ***ansible-pr
 
 * Note: Ansible uses TCP port 22 by default, which means it needs to ssh into target servers from Jenkins-Ansible host – for this we can implement the concept of ***ssh-agent***. Now we need to import the key into ssh-agent:
 
+* with gitbash
+
 
 ```
 eval `ssh-agent -s`
