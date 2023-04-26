@@ -141,7 +141,7 @@ You will need TLS certificates to handle secured connectivity to your ***Applica
 
 
 
-## Set-up EFS 
+## 4. Set-up EFS 
 
 [Amazon Elastic File System](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AmazonEFS.html) provides a simple, scalable, fully managed elastic Network File System (NFS) for use with AWS Cloud services and on-premises resources. In this project, we will utulize EFS service and mount filesystems on both ***Nginx*** and ***Webservers*** to store data.
 
@@ -161,7 +161,7 @@ You will need TLS certificates to handle secured connectivity to your ***Applica
 ![acess-point.PNG](./images/acess-point.PNG)
 
 
-## Set-up RDS
+## 5. Set-up RDS
 
 ***Pre-requisite***: Create a KMS key from [Key Management Service](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Welcome.html) to be used to encrypt the database instance.
 
@@ -194,6 +194,102 @@ To configure RDS, follow steps below:
 * Enable CloudWatch monitoring and export Error and Slow Query logs (for production, also include Audit)
 
 
+## 6.  Create AMI EC2 instance for Nginx and Bastion servers
+
+* Create Launch templates and target groups as later on we will need to setup AMI containing configurations to be done on this respective servers.
+
+* Launch EC2 Redhat based instance for Bastion
+
+I created Launch Templtaes for the Nginx and Bastion servers, then did the following:
+
+### On the Bastion server
+
+After connecting via ***ssh*** from the terminal, I ran the following commands to install some necessary softwares:
+
+`sudo yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm`
+
+`sudo yum install -y dnf-utils http://rpms.remirepo.net/enterprise/remi-release-9.rpm`
+
+`sudo yum install wget vim python3 telnet htop git mysql net-tools chrony -y`
+
+```
+systemctl start chronyd 
+
+systemctl enable chronyd
+
+systemctl status chronyd
+```
+
+![Chronyd.PNG](./images/Chronyd.PNG)
+
+
+### On the Nginx server
+
+After connecting to EC2 Instance for Nginx via ***ssh*** from the terminal, I ran the following commands to install some necessary softwares:
+
+`sudo yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm`
+
+`sudo yum install -y dnf-utils http://rpms.remirepo.net/enterprise/remi-release-9.rpm`
+
+
+`sudo yum install wget vim python3 telnet htop git mysql net-tools chrony -y`
+
+
+```
+systemctl start chronyd 
+  
+systemctl enable chronyd
+
+systemctl status chronyd 
+```
+
+* Configure Selinux policies
+
+```
+setsebool -P httpd_can_network_connect=1
+setsebool -P httpd_can_network_connect_db=1
+setsebool -P httpd_execmem=1
+setsebool -P httpd_use_nfs 1
+```
+
+* Install amazon efs utils for mounting the target on the Elastic file system
+
+```
+git clone https://github.com/aws/efs-utils
+
+cd efs-utils
+
+yum install -y make
+
+yum install -y rpm-build
+
+make rpm 
+
+yum install -y  ./build/amazon-efs-utils*rpm
+```
+
+* setting up self-signed certificate for the nginx instance
+
+`sudo mkdir /etc/ssl/private`
+
+`sudo chmod 700 /etc/ssl/private`
+
+`openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/ACS.key -out /etc/ssl/certs/ACS.crt`
+
+`sudo openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048`
+
+
+![Install-certs.PNG](./images/Install-certs.PNG)
+
+
+Then confirm the cert installation was successful and present in my server: 
+
+
+`ls -l /etc/ssl/certs/`
+
+`ls -l /etc/ssl/private/`
+
+![Certs.PNG](./images/Certs.PNG)
 
 
 
