@@ -204,6 +204,9 @@ resource "aws_route_table_association" "public-subnets-assoc" {
 ```
 
 
+
+* Ran `terraform fmt` and `terraform plan`
+
 ![plan-network.PNG](./images/plan-network.PNG)
 
 ## STEP 5: Creating IAM Roles
@@ -794,7 +797,7 @@ resource "aws_lb_listener_rule" "tooling-listener" {
 }
 ```
 
-### Also add the following outputs to output.tf to print them on screen
+* ***Also add the following code to `output.tf` to print them on screen when the `terraform plan` is ran***
 
 ```
 output "alb_dns_name" {
@@ -1118,8 +1121,8 @@ resource "aws_autoscaling_attachment" "asg_attachment_tooling" {
 
 1. Bastion (`bastion.sh`)
 2. Nginx (`nginx.sh`)
-3. Wordpress (`wordpress`)
-4. Tooling (`tooling`)
+3. Wordpress (`wordpress.sh`)
+4. Tooling (`tooling.sh`)
 
 ### for `bastion.sh`
 
@@ -1358,7 +1361,7 @@ resource "aws_db_instance" "pbl-rds" {
 }
 ```
 
-***Note that***: As we progress during the project, all the variables referrenced in the resources must be declared in the `variables.tf` file and also have their `default` values declared in the `terraform.tfvars` file. We should have both files with the contents as shown below:
+***Note that***: As we progress during the project, all the variables referrenced in the resources must be declared in the `variables.tf` file and also have their `default` values declared in the `terraform.tfvars` file. We should now have both files with the contents as shown below:
 
 * ***`variables.tf`***
 ```
@@ -1557,6 +1560,11 @@ resource "aws_subnet" "private" {
 `terraform detroy --auto-approve`
 
 ![destroy.PNG](./images/destroy.PNG)
+
+
+
+
+***END OF PROJECT....***
 
 
 
