@@ -133,6 +133,86 @@ Run the MySQL Client Container:
 
 Preparing a database schema so that the Tooling application can connect to it.
 
+1. Clone the Tooling-app repository from [here](https://github.com/darey-devops/tooling)
+
+`git clone https://github.com/darey-devops/tooling`
+
+
+2. Export the location of the SQL file
+
+`export tooling_db_schema=/tooling_db_schema.sql`
+
+Find the `tooling_db_schema.sql` in the `tooling/html/tooling_db_schema.sql` folder of cloned repo
+
+Verify that the path is exported:
+
+`echo $tooling_db_schema`
+
+![echo-db.PNG](./images/echo-db.PNG)
+
+
+3. Use the SQL script to create the database and prepare the schema. With the docker exec command, execute the command in a running container.
+
+`docker exec -i mysql-server mysql -uroot -p$MYSQL_PW < $tooling_db_schema`
+
+![exec.png](./images/exec.png)
+
+Update the .env file with connection details to the database
+
+
+***Note***: The .env file is located in the html `tooling/html/.env` folder but ***not visible in terminal***. 
+
+
+`sudo vi .env`
+
+```
+MYSQL_IP=mysqlserverhost
+MYSQL_USER=username
+MYSQL_PASS=client-secrete-password
+MYSQL_DBNAME=toolingdb
+```
+
+5. Run the Tooling App
+
+Run the Tooling App
+
+Containerization of an application starts with creation of a file with a special name - `'Dockerfile'` (without any extensions). This can be considered as a `'recipe'` or `'instruction'` that tells ***Docker*** how to pack your application into a container. In this project, I will build the required container from a pre-created `Dockerfile`.
+
+***Note***: Ensure that the `.env` file have the data of my database and I am inside the `"tooling"`directory that has the file `Dockerfile` to build the container with the command below:
+
+`docker build -t tooling:0.0.1 .`
+
+In the above command, we specify a parameter `-t`, so that the image can be tagged `tooling"0.0.1` - Also, notice the `.` at the end. This is important as that tells `Docker` to locate the `Dockerfile` in the current directory the command is running from. Otherwise, it will be required to specify the ***absolute path*** to the `Dockerfile`.
+
+
+6. Run the container
+
+`docker run --network tooling_app_network -p 8085:80 -it tooling:0.0.1`
+
+***Note***: There is no name tag for the container, so expect `Docker` to assign a generic name to the container.
+
+
+I experienced the following error:
+
+`AH00558: apache2: Could not reliably determine the server's fully qualified domain name, using 172.18.0.3. Set the 'ServerName' directive globally to suppress this message`
+
+![error](./images/error.PNG)
+
+
+But resolved this by updating the hostname with `-h` tag as in the command below:
+
+`docker run --rm --name tooling-leey -h ec2-35-177-165-45.eu-west-2.compute.amazonaws.com --network tooling_app_network -p 8089:80 -it tooling:0.0.1`
+
+I also added a name tage
+
+
+
+
+
+
+
+
+
 
 
 

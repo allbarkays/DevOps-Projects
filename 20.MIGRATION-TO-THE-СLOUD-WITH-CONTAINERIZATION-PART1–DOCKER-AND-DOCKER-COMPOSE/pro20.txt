@@ -1,0 +1,57 @@
+FROM php:7-apache
+MAINTAINER Dare dare@darey.io
+
+ENV MYSQL_IP=$MYSQL_IP
+ENV MYSQL_USER=$MYSQL_USER
+ENV MYSQL_PASS=$MYSQL_PASS
+ENV MYSQL_DBNAME=$MYSQL_DBNAME
+
+RUN docker-php-ext-install mysqli
+RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+COPY apache-config.conf /etc/apache2/sites-available/000-default.conf
+COPY start-apache /usr/local/bin
+RUN a2enmod rewrite
+
+# Copy application source
+COPY html /var/www
+RUN chown -R www-data:www-data /var/www
+
+CMD ["start-apache"]
+
+
+MYSQL_IP=mysqlserverhost
+MYSQL_USER=Admin
+MYSQL_PASS=Admin.com
+MYSQL_DBNAME=toolingdb
+
+
+Resolved error: AH00558: apache2: Could not reliably determine the server's fully qualified domain name, using 172.18.0.3. Set the 'ServerName' directive globally to suppress this message
+
+sudo docker run --rm --name tooling-leey2 -h ec2-35-177-165-45.eu-west-2.compute.amazonaws.com --network tooling_app_network -p 8089:80 -it tooling:0.0.1
+
+git clone https://github.com/allbarkays/tooling.git
+
+[core:notice] [pid 1] AH00094: Command line: 'apache2 -D FOREGROUND' means it's initialized and accepting connections
+
+$ docker run -d --rm --name apache -p 8080:80 php:7.2-apache
+4e486e3acbb6dfdd39ad89bb42e4cf4ffdce4d51f39338281461d807bca06b7b
+
+$ docker logs apache 2>&1 | tail -n 10
+AH00558: apache2: Could not reliably determine the server's fully qualified domain name, using 172.17.0.2. Set the 'ServerName' directive globally to suppress this message
+AH00558: apache2: Could not reliably determine the server's fully qualified domain name, using 172.17.0.2. Set the 'ServerName' directive globally to suppress this message
+[Mon Apr 20 15:19:29.419284 2020] [mpm_prefork:notice] [pid 1] AH00163: Apache/2.4.38 (Debian) PHP/7.2.30 configured -- resuming normal operations
+[Mon Apr 20 15:19:29.419632 2020] [core:notice] [pid 1] AH00094: Command line: 'apache2 -D FOREGROUND'
+
+
+$ curl localhost:8080
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<html><head>
+<title>403 Forbidden</title>
+</head><body>
+<h1>Forbidden</h1>
+<p>You don't have permission to access this resource.</p>
+<hr>
+<address>Apache/2.4.38 (Debian) Server at localhost Port 8080</address>
+</body></html>
+
