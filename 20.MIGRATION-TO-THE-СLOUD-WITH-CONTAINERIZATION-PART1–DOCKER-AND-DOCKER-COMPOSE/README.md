@@ -155,7 +155,7 @@ Verify that the path is exported:
 
 `docker exec -i mysql-server mysql -uroot -p$MYSQL_PW < $tooling_db_schema`
 
-![exec.png](./images/exec.png)
+![exec](./images/exec.PNG)
 
 Update the .env file with connection details to the database
 
