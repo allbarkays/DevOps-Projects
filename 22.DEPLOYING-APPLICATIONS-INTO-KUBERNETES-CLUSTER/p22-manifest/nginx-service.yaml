@@ -6,7 +6,6 @@ spec:
   type: LoadBalancer
   selector:
     app: nginx-pod
-    tier: frontend
   ports:
     - protocol: TCP
       port: 80
