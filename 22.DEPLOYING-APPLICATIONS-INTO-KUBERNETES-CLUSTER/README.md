@@ -129,7 +129,7 @@ spec:
 ![nodeport](./images/nodeport.PNG)
 
 
-## STEP 4: Creating A Replica Set
+## Step 4: Creating A Replica Set
 
 The `ReplicaSet` object is used to maintain a stable set of Pod replicas running at any given time to achieve availability in case one or two pods dies which can happen anytime
 
@@ -184,6 +184,13 @@ And Declarative method is achieved by editing the `rs.yaml` file and changing to
 
 ## USING AWS LOAD BALANCER TO ACCESS YOUR SERVICE IN KUBERNETES.
 
+***Note***: I will only be able to test this using **AWS EKS** in this current project. In the next project, I would update my `Terraform code` to build an **EKS cluster**.
+
+I have previously accessed the `Nginx service` through `ClusterIP`, and `NodeIP`, but there is another service type – `Loadbalancer`. This type of service does not only create a service object in K8s, but also provisions a real external Load Balancer (e.g. Elastic Load Balancer – ELB in AWS)
+
+To get the experience of this service type, I'll update the service manifest yaml file as below and use the `LoadBalancer type`, ensuring that the selector references the `Pods` in the `replica set`.
+
+
 ```
 apiVersion: v1
 kind: Service
@@ -207,6 +214,14 @@ Apply the configuration:
 
 ![loadbalancer](./images/lb.PNG)
 
+***ELB created in AWS***
+
+
+![lb-created](./images/lb-created.PNG)
+
+![lb-tags](./images/lb-tags.PNG)
+
+***Note***: A Kubernetes component in the control plane called `Cloud-controller-manager` is responsible for triggering this action. It connects to the specific cloud provider’s APIs (in this case AWS) and create resources such as Load balancers.
 
 Output for running `kubectl get service nginx-service -o yaml` is as seen below showing the dns:
 
@@ -249,11 +264,138 @@ status:
     - hostname: aa16ab01473714c09a95d1826fef882f-208048567.eu-west-2.elb.amazonaws.com
 ```
 
+***Note that***
+
+1. A `clusterIP` key is updated in the manifest and assigned an `IP address`. Though I have specified a `Loadbalancer` service type, internally it still requires a `clusterIP` to route the external traffic through.
+
+2. In the ports section, `nodePort` is still used. This is because Kubernetes still needs to use a dedicated port on the `worker node` to route the traffic through. Ensure that port range 30000-32767 is opened in the inbound `security group` configuration.
+
+
+To access the `Nginx service`, Copy and paste the `load balancer’s dns` to the browser.
+
 ![dns-replica](./images/dns-replica.PNG)
 
 
+## Step 5: Creating Deployment
+
+A `Deployment` is another layer above `ReplicaSets` and `Pods`. It manages the deployment of ReplicaSets and allows for easy updating of a ReplicaSet as well as the ability to roll back to a previous version of deployment. It is declarative and can be used for rolling updates of micro-services, ensuring there is no downtime.
+
+It is highly recommended to use `Deplyments` to manage replica sets rather than using replica sets directly.
+
+Get started by deleting the ReplicaSet: `kubectl delete rs nginx-rs`
+
+Then, run `kubectl apply -f deployment.yaml` to create a Deployment from a `deployment.yaml` manifest file that is populated with the code below:
+
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    tier: frontend
+    app: nginx-pod
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      tier: frontend
+      app: nginx-pod
+  template:
+    metadata:
+      name: nginx-pod
+      labels:
+        tier: frontend
+        app: nginx-pod
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest
+        ports:
+        - containerPort: 80
+```
+
+* Check the set up with commands below:
+
+`kubectl get deploy`
+
+`kubectl get rs`
+
+`kubectl get pods`
+
+![deployment](./images/deployment.PNG)
+
+* Exec into one of the Pod’s container to run Linux commands
+
+`kubectl exec -it nginx-deployment-5cd57f68c7-2p4mm bash`
+
+* List the files and folders in the Nginx directory
+
+`ls -ltr /etc/nginx/`
+
+![exec](./images/exec.PNG)
+
+## PERSISTING DATA FOR PODS
+
+Deployments are stateless by design. Hence, any data stored inside the Pod’s container does not persist when the Pod dies.
+
+If you were to update the content of the `index.html` file inside the container, and the Pod dies, that content should not be lost since a new Pod will replace the dead one.
+
+Let us try that:
+
+* Scale the Pods down to 1 replica, run: `kubectl scale deploy nginx-deployment --replicas=1`
+
+* Exec into the running container, run: `kubectl exec -it nginx-deployment-5cd57f68c7-2p4mm bash`
+
+* Install `vim` so that I can edit the file
+
+```
+apt-get update
+apt-get install vim
+```
+* Update the content of the `index.html` file and add the code below: `/usr/share/nginx/html/index.html`
+
+```
+<!DOCTYPE html>
+<html>
+<head>
+<title>Welcome to DAREY.IO!</title>
+<style>
+    body {
+        width: 35em;
+        margin: 0 auto;
+        font-family: Tahoma, Verdana, Arial, sans-serif;
+    }
+</style>
+</head>
+<body>
+<h1>Welcome to DAREY.IO!</h1>
+<p>I love experiencing Kubernetes</p>
+
+<p>Learning by doing is absolutely the best strategy at 
+<a href="https://darey.io/">www.darey.io</a>.<br/>
+for skills acquisition
+<a href="https://darey.io/">www.darey.io</a>.</p>
+
+<p><em>Thank you for learning from DAREY.IO</em></p>
+
+<p><em>Thank you for using nginx</em></p>
+</body>
+</html>
+```
+
+* Check the browser – Got this!!!
 
 ![dareyio](./images/dareyio-deploy.PNG)
+
+* Now, delete the only running Pod
+
+`kubectl delete po nginx-deployment-5cd57f68c7-2p4mm`
+
+***We got back to the usual nginx page as a new pod was immediately created***
+
+![newpod](./images/newpod.PNG)
+
+![dns-replica](./images/dns-replica.PNG)
 
 
 
