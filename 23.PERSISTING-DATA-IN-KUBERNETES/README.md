@@ -1,7 +1,5 @@
 # PERSISTING DATA IN KUBERNETES
 
-![p23](./images/p23.PNG)
-
 ## Step 1: Set Up AWS Elastic Kubernetes Service With `EKSCTL`
 
 * Installed [eksctl](https://github.com/weaveworks/eksctl/blob/main/README.md#for-windows-1) using chocolatey and checked version with `eksctl version`
@@ -17,22 +15,77 @@
 ![clusterp231](./images/clusterp231.PNG)
 
 
-Tasks
+## Step 2: Creating Persistent Volume Manually For The Nginx Application
 
-Verify that the pod is running
-![clusterp231](./images/clusterp231.PNG)
+Before creating a volume, lets run the nginx deployment into kubernetes without a volume:
 
-Check the logs of the pod
-![clusterp231](./images/clusterp231.PNG)
+`kubectl apply -f deployment.yaml`
 
-Exec into the pod and navigate to the nginx configuration file /etc/nginx/conf.d
-![clusterp231](./images/clusterp231.PNG)
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    tier: frontend
+    app: nginx-pod
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      tier: frontend
+      app: nginx-pod
+  template:
+    metadata:
+      name: nginx-pod
+      labels:
+        tier: frontend
+        app: nginx-pod
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest
+        ports:
+        - containerPort: 80
+```
 
-Open the config files to see the default configuration.
-![clusterp231](./images/clusterp231.PNG)
+
+* Verify that the pod is running and check the logs of the pod
+
+![clusterp231](./images/deploy.PNG)
 
 
-* Update the deployment configuration with the volume spec:
+* Exec into the pod and navigate to the nginx configuration file `/etc/nginx/conf.d`
+
+* Open the config files to see the `default` configuration.
+
+![default-conf](./images/default-conf.PNG)
+
+* ***Now that I have the pod running without a volume, I would now create a volume from the AWS console. However, I would need to know the AZ for the working node where the pod is running because it is required for the volume to be in same AZ as the working node***
+
+Hence, find the running pod with describe command for both pod and node:
+
+`kubectl get po nginx-deployment-5cd57f68c7-jfw79 -o wide`
+
+![getpod](./images/getpod.PNG)
+
+`kubectl describe pod nginx-deployment-5cd57f68c7-jfw79`
+
+![describe-pod](./images/describe-pod.PNG)
+
+`kubectl describe node ip-10-0-3-233.eu-west-2.compute.internal`
+
+The required information is written in the `labels` section of the descibe output as seen below:
+
+![describe-node](./images/describe-node.PNG)
+
+* So, in the case above, I could see the `AZ` for the node is in `eu-west-2c`, hence, the volume must be created in the same AZ. Choose the size of the required volume.
+
+![ebs-vol.PNG](./images/ebs-vol.PNG)
+
+![ebs-vol.PNG](./images/ebs-vol1.PNG)
+
+* Update and apply the `deployment` configuration with the `volume` spec:
 
 ```
 apiVersion: apps/v1
@@ -68,7 +121,7 @@ spec:
           fsType: ext4
 ```
 
-* I did port forward the service and reached the app from the browser on port 8088. 
+* I did `port forward` the service and reached the app from the browser on port `8088`. 
 
 `kubectl apply -f pf-service.yaml`
 
@@ -90,7 +143,7 @@ spec:
 
 ![pf](./images/pf.PNG)
 
-* Update the deployment configuration with the volume spec and volume mount:
+* Then, update the `deployment` configuration with the `volume` spec and `volume mount`. The `volumeMounts` basically answers the question ***`Where should this Volume be mounted inside the container?`*** Mounting a volume to a directory means that all data written to the directory will be stored on that volume.
 
 ```
 apiVersion: apps/v1
@@ -127,6 +180,10 @@ spec:
           volumeID: "vol-008429efedf353f30"
           fsType: ext4
 ```
+
+***Note***: The value provided to name in `volumeMounts` must be the same value used in the `volumes` section. It basically means mount the volume with the name provided, to the provided `mountpath`
+
+
 
 ```
 apiVersion: apps/v1
