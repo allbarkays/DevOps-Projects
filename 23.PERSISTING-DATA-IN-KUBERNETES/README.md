@@ -184,6 +184,42 @@ spec:
 ***Note***: The value provided to name in `volumeMounts` must be the same value used in the `volumes` section. It basically means mount the volume with the name provided, to the provided `mountpath`
 
 
+## Step 3: Managing Volumes Dynamically With PV and PVCs
+
+* `PV`s are resources in the cluster. `PVC`s are requests for those resources and also act as claim checks to the resource. By default in EKS, there is a default `storageClass` configured as part of EKS installation which allow us to dynamically create a PV which will create a volume that a pod will use.
+
+* Verifying that there is a `storageClass` in the cluster: `kubectl get storageclass`
+
+* Creating a manifest file for a `PVC`, and based on the `gp2 storageClass` a PV will be dynamically created:
+
+```
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+      name: nginx-volume-claim
+spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 2Gi
+      storageClassName: gp2
+```
+
+* Check the setup:
+
+`kubectl get pvc`
+
+`kubectl describe pvc`
+
+* Check for the volume binding section:
+
+`kubectl describe storageclass gp2`
+
+![pvc](./images/describepvc.PNG)
+
+
+It will appear that the `PVC` created is in pending state because PV is not created yet. So will edit the `deployment.yaml` file to create the PV with the code below:
 
 ```
 apiVersion: apps/v1
@@ -219,6 +255,10 @@ spec:
         persistentVolumeClaim:
           claimName: nginx-volume-claim
 ```
+
+***Note***: The `/tmp/alli` directory will be persisted, and any data written in there will be stored permanetly on the volume, which can be used by another Pod if the current one gets replaced.
+
+
 ## Persisting configuration data with configMaps
 According to the official documentation of [configMaps](https://kubernetes.io/docs/concepts/configuration/configmap/), A ConfigMap is an API object used to store non-confidential data in key-value pairs. Pods can consume ConfigMaps as environment variables, command-line arguments, or as configuration files in a volume.
 
@@ -349,6 +389,8 @@ data:
     <a href="http://DAREY.IO/">DAREY.IO</a>.</p>
 
     <p><em>Thank you and make sure you are on Darey's Masterclass Program.</em></p>
+
+    <p><em>Here's completing proj23.</em></p>
     </body>
     </html>
 ```
@@ -359,6 +401,10 @@ data:
 * Without restarting the pod, the site should be loaded automatically when the browser is refreshed as seen below:
 
 ![result](./images/result.PNG)
+
+
+
+***..........END OF PROJECT..............***
 
 
 
