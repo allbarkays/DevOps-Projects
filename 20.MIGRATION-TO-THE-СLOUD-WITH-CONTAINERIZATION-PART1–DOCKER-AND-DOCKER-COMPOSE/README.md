@@ -203,7 +203,11 @@ But resolved this by updating the hostname with `-h` tag as in the command below
 
 `docker run --rm --name tooling-leey -h ec2-35-177-165-45.eu-west-2.compute.amazonaws.com --network tooling_app_network -p 8089:80 -it tooling:0.0.1`
 
-I also added a name tage
+I also added a name tag
+
+
+***..........END OF PROJECT..............***
+task to update
 
 
 
