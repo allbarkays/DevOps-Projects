@@ -1,5 +1,3 @@
-# project4
-
 # MEAN STACK DEPLOYMENT TO UBUNTU IN AWS
 
 
@@ -71,5 +69,5 @@ Added TCP port 3300 in my security group in Ubuntu server EC2 instance in AWS.
 
 
 
-With this done, I can't wait to start more complex and fun *‘PBL Professional’* projects!!!
+***..........END OF PROJECT..............***
 

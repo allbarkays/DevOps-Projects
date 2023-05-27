@@ -1,5 +1,3 @@
-# project2
-
 # WEB STACK IMPLEMENTATION (LEMP STACK)
 
 set up another instance in AWS
@@ -101,3 +99,5 @@ And confirmed this changes by adding */todo_list.php* to the (URL) public IP add
 
 
 PHP ready to connect and interact with the MySql server
+
+***..........END OF PROJECT..............***

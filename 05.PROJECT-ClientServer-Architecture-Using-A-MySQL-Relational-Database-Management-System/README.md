@@ -1,5 +1,3 @@
-# project5
-
 # CLIENT-SERVER ARCHITECTURE WITH MYSQL
 
 I started by creating the two ubuntu servers to be used for this project. One as a SERVER and the other as a CLIENT
@@ -96,10 +94,4 @@ then, I confirmed the status running with the command
 ![database-for-client.PNG](./images/database-for-client.PNG)
 
 
-***project 5 completed succesfully***
-<<<<<<< HEAD
-
-
-next
-=======
->>>>>>> fad32678b8c4ecad80424249fad71ebbf14fd77e
+***..........END OF PROJECT..............***

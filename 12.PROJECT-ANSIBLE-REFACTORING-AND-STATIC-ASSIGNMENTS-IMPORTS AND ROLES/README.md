@@ -338,14 +338,6 @@ Ansible architecture now looks like this:
 ![current-archy.PNG](./images/current-archy.PNG)
 
 
-ubuntu@54.160.88.166
-
-ec2-user@34.203.33.70
-
-ec2-user@54.144.250.20
-
-
-- hosts: all
-- import_playbook: ../static-assignments/common-del.yml
+***..........END OF PROJECT..............***
 
 

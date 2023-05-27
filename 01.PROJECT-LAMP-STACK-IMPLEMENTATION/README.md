@@ -1,5 +1,3 @@
-# Project 1
-
 # WEB STACK IMPLEMENTATION (LAMP STACK) IN AWS
 
 `sudo apt update`    ran sudo apt update command
@@ -89,3 +87,6 @@ I got the error below several times before I edited with E
 
 
 ![projectLamprecovery.PNG](./images/projectLamprecovery.PNG)
+
+
+***..........END OF PROJECT..............***

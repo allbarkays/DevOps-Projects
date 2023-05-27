@@ -1,5 +1,3 @@
-# project7
-
 # DEVOPS TOOLING WEBSITE SOLUTION
 
 In this project I will implement a solution that consists of following components:
@@ -518,5 +516,5 @@ http://<Web-Server-Public-IP-Address-or-Public-DNS-Name>/index.php
 ![webserver-login3.PNG](./images/webserver-login3.PNG)
 
 
-***Its project 7 success***  🙂
+***..........END OF PROJECT..............***  🙂
 

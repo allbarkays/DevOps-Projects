@@ -1,5 +1,3 @@
-# auxillary-projects
-
 # Aux project using shell script
 
 This project is entirely to test knowledge of the linux commands learnt thus far and the shell scripting knowledge.
@@ -260,6 +258,9 @@ Below is the Youtube link to my screen record demo on how the users were onboard
 
 
 [Project demo](https://www.youtube.com/watch?v=9IOvwizIHhI)
+
+
+***..........END OF PROJECT..............***
 
 
 

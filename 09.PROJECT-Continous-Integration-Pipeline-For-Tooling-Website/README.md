@@ -1,5 +1,3 @@
-# project9
-
 # INSTALL AND CONFIGURE JENKINS SERVER
 
 ## Step 1 – Install Jenkins server
@@ -210,5 +208,5 @@ sudo systemctl status nfs-server.service
 
 
 
-# PROJECT SUCCESSFUL ***!!!***
+***..........END OF PROJECT..............***
 

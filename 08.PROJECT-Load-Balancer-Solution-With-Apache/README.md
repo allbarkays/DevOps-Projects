@@ -1,5 +1,3 @@
-# project8
-
 # LOAD BALANCER SOLUTION WITH APACHE
 
 * Prerequisites from project 7
@@ -105,4 +103,4 @@ http://http://3.91.184.38/index.php
 
 
 
-***End of project***
+***..........END OF PROJECT..............***

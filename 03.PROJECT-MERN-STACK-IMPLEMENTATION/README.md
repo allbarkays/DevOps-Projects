@@ -1,7 +1,3 @@
-# Project3
-
-# Project 3
-
 # SIMPLE TO-DO APPLICATION ON MERN WEB STACK
 
 
@@ -162,8 +158,7 @@ Reflecting the _*POST and GET requests*_
 
 
 
->
-Honestly, it was a bit frustrating to start this report all over after loosing the initial one but I hope I did a good enough job as the project itself was so seamless for me...
+***..........END OF PROJECT..............***
 
 
 

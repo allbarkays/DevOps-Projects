@@ -1,5 +1,3 @@
-# project10
-
 # LOAD BALANCER SOLUTION WITH NGINX AND SSL/TLS
 
 ## Project Task Architecture
@@ -168,4 +166,7 @@ Add following line:
 
 
 With the aid of the documentation, I have just implemented an Nginx Load Balancing Web Solution with secured HTTPS connection with periodically updated SSL/TLS certificates.
+
+
+***..........END OF PROJECT..............***
 

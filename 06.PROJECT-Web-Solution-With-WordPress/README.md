@@ -1,6 +1,4 @@
-# project6
-
-## Web Solution With WordPress
+# Web Solution With WordPress
 
 This project is tasked to prepare storage infrastructure on two Linux servers and implement a basic web solution using WordPress.
 
@@ -394,5 +392,5 @@ on web server goto:
 ![Viola.PNG](./images/Viola.PNG)
 
 
-***Project 6 successfully completed!!!***
+***..........END OF PROJECT..............***
 
